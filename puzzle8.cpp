@@ -12,16 +12,18 @@ class node {
 public:
 	std::vector<int> nodeInts;
 	std::vector<node> childNodes;
+	std::vector<int> metadataNodes;
 	int childNodeCount;
-	int metadataNodes;
+	int metadataNodeCount;
 	int metadataSum = 0;
 
 	node(std::vector<int>::iterator &it) {
 		totalNodes++;
 		childNodeCount = *it++;
-		metadataNodes = *it++;
+		metadataNodeCount = *it++;
 		calculateChildNodes(it);
-		for (int i = 0;i < metadataNodes;i++) {
+		for (int i = 0;i < metadataNodeCount;i++) {
+			metadataNodes.push_back(*it);
 			metadataSum += *it++;
 		}
 	};
@@ -38,6 +40,20 @@ public:
 			totalSum += childNode.calculateTreeMetadataSum();
 		}
 		return totalSum;
+	}
+
+	int calculatePartTwoSum() const {
+		int partTwoSum = 0;
+		if (childNodeCount > 0) {
+			for (auto &metadataInt : metadataNodes) {
+				if (childNodes.size() >= metadataInt) {
+					partTwoSum += childNodes[metadataInt-1].calculatePartTwoSum();
+				}
+			}
+		} else {
+			return metadataSum;
+		}
+		return partTwoSum;
 	}
 };
 
@@ -65,7 +81,26 @@ int processFileContents(std::vector<std::string> &fileContents) {
 }
 
 int processFileContentsPartTwo(std::vector<std::string> &fileContents) {
-	return 0;
+	int totalMetadata = 0;
+        for(auto &line : fileContents) {
+                std::vector<int> plateContents;
+                int startIndex = 0;
+                int endIndex = 0;
+
+                while ((endIndex = line.find_first_of(' ', startIndex)) != line.npos) {
+                        std::string intStr = line.substr(startIndex, endIndex - startIndex);
+                        plateContents.push_back(std::stoi(intStr));
+                        startIndex = endIndex+1;
+                }
+                if (endIndex == line.npos) {
+                        std::string intStr = line.substr(startIndex, line.size()-startIndex);
+                        plateContents.push_back(std::stoi(intStr));
+                }
+                auto it = plateContents.begin();
+                node lineNode(it);
+                totalMetadata += lineNode.calculatePartTwoSum();
+        }
+        return totalMetadata;
 }
 
 int openAndReadFile(std::string fileName, bool partTwo = false) {
@@ -92,7 +127,9 @@ int main(int argc, char **argv) {
                 return 1;
         }
 	int metadataSum = openAndReadFile(argv[1]);
+	int partTwoSum = openAndReadFile(argv[1], true);
 
 	printf("Metadata sum is %d\n", metadataSum);
+	printf("Part two sum is %d\n", partTwoSum);
 	return 0;
 }
