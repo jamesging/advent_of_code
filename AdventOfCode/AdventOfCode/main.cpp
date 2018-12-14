@@ -20,7 +20,7 @@
 
 int main(int argc, const char * argv[]) {
     while (true) {
-        printf("Which puzzle do you want to run? Current options are [1-9].\nOr quit with 'q'\n?>\t");
+        printf("Which puzzle do you want to run? Current options are [1-10].\nOr quit with 'q'\n?>\t");
         std::string readCommand;
         std::cin >> readCommand;
         if (readCommand == "q") {
