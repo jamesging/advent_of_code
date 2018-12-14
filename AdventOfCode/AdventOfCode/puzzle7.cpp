@@ -1,16 +1,13 @@
-#include <stdio.h>
-#include <fstream>
-#include <istream>
-#include <map>
+#include "puzzle7.hpp"
+#include "AOCUtils.hpp"
+
 #include <set>
-#include <vector>
-#include <string>
 
-static int workerCount = 5;
-static int stepTime = 60;
-static int currentTime = 0;
+int puzzle7::currentTime = 0;
+int puzzle7::workerCount;
+int puzzle7::stepTime;
 
-class step {
+class puzzle7::step {
 public:
 	std::vector<char> dependsOn;
 	char stepName;
@@ -50,7 +47,7 @@ public:
 	}
 };
 
-class worker {
+class puzzle7::worker {
 public:
 	step *currentStep = NULL;
 	int startedAt;
@@ -78,14 +75,14 @@ public:
 	}
 };
 
-void addStepIfMissing(char stepName, std::map<char, step> &steps) {
+void puzzle7::addStepIfMissing(const char stepName, std::map<char, step> &steps) {
 	if (steps.find(stepName) == steps.end()) {
 		step newStep(stepName);
 		steps.emplace(stepName, newStep);
 	}
 }
 
-void runSteps(std::map<char, step> &steps, std::string &runOrder) {
+void puzzle7::runSteps(std::map<char, step> &steps, std::string &runOrder) {
 	int remainingCount = 0;
 	for (auto &stepPair : steps) {
 		step &step = stepPair.second;
@@ -102,7 +99,7 @@ void runSteps(std::map<char, step> &steps, std::string &runOrder) {
 	}
 }
 
-void runStepsPartTwo(std::map<char, step> &steps, std::vector<worker> &workers,
+void puzzle7::runStepsPartTwo(std::map<char, step> &steps, std::vector<worker> &workers,
 	std::string &runOrder, int &runTime) {
 	bool remainingStep = false;
 	bool ranStep = false;
@@ -136,7 +133,7 @@ void runStepsPartTwo(std::map<char, step> &steps, std::vector<worker> &workers,
 	}
 }
 
-std::string processFileContents(std::vector<std::string> &fileContents) {
+std::string puzzle7::parseInstructions(const std::vector<std::string> &fileContents) {
 	std::map<char, step> steps;
 	for(auto &line : fileContents) {
 		char stepName = line[line.find_first_of(' ')+1];
@@ -155,7 +152,7 @@ std::string processFileContents(std::vector<std::string> &fileContents) {
 	return runOrder;
 }
 
-std::string processFileContentsPartTwo(std::vector<std::string> &fileContents) {
+std::string puzzle7::parseInstructionsPartTwo(const std::vector<std::string> &fileContents) {
 	std::vector<worker> workers;
 	for (int i = 0;i < workerCount;i++) {
 		workers.push_back(worker(i));
@@ -180,35 +177,16 @@ std::string processFileContentsPartTwo(std::vector<std::string> &fileContents) {
 	return runOrder;
 }
 
-std::string openAndReadFile(std::string fileName, bool partTwo = false) {
-        std::filebuf fb;
-        std::vector<std::string> fileContents;
-        if (fb.open(fileName, std::ios::in)) {
-                std::istream fileStream(&fb);
-                std::string currLine;
-                while(std::getline(fileStream, currLine)) {
-                        fileContents.push_back(currLine);
-                }
-		fb.close();
-		if (partTwo) {
-			return processFileContentsPartTwo(fileContents);
-		}
-                return processFileContents(fileContents);
-        }
-        return "";
-}
+void puzzle7::runPuzzle(const int _workerCount, const int _stepTime) {
+    stepTime = _stepTime;
+    workerCount = _workerCount;
+    std::vector<std::string> fileContents;
+    AOCUtils::openAndReadFile("input_data/puzzle7_input.txt", fileContents);
+    
+    puzzle7 puzzle;
+    std::string partOneOrder = puzzle.parseInstructions(fileContents);
+	std::string partTwoOrder = puzzle.parseInstructionsPartTwo(fileContents);
 
-int main(int argc, char **argv) {
-	if (argc != 4) {
-                printf("Incorrect usage. Try: puzzle7 [Input file name] [step base time] [worker count]\n");
-                return 1;
-        }
-	stepTime = atoi(argv[2]);
-	workerCount = atoi(argv[3]);
-	std::string stepOrder = openAndReadFile(argv[1]);
-	std::string partTwoOrder = openAndReadFile(argv[1], true);
-
-	printf("Step order is %s\n", stepOrder.c_str());
+	printf("Part one step order is %s\n", partOneOrder.c_str());
 	printf("Part two step order is %s\n", partTwoOrder.c_str());
-	return 0;
 }

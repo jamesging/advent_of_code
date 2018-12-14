@@ -1,9 +1,12 @@
-#include <stdio.h>
-#include <list>
-#include <map>
+#include "puzzle9.hpp"
 
-std::pair<int, long> playMarbleGame(const int numPlayers,
-	const int highestMarble, const int scoringValue) {
+#include <list>
+
+int puzzle9::numPlayers;
+int puzzle9::highestMarble;
+int puzzle9::scoringValue;
+
+std::pair<int, long> puzzle9::playMarbleGame() {
 	std::map<int, long> players;
 	for (int i = 0;i < numPlayers;i++) {
 		players[i] = 0;
@@ -52,19 +55,16 @@ std::pair<int, long> playMarbleGame(const int numPlayers,
 	return std::make_pair(winningPlayer, topScore);
 }
 
-int main(int argc, char **argv) {
-	if (argc != 4) {
-                printf("Incorrect usage. Try: puzzle9 [number of players] [highest marble] \
-			[scoring value]\n");
-                return 1;
-        }
-	int numPlayers = atoi(argv[1]);
-	int highestMarble = atoi(argv[2]);
-	int scoringValue = atoi(argv[3]);
-	std::pair<int, long> winningPlayer = playMarbleGame(numPlayers, highestMarble, scoringValue);
-	std::pair<int, long> partTwoWinner = playMarbleGame(numPlayers, highestMarble*100, scoringValue);
+void puzzle9::runPuzzle(const int _numPlayers, const int _highestMarble, const int _scoringValue) {
+    numPlayers = _numPlayers;
+	highestMarble = _highestMarble;
+	scoringValue = _scoringValue;
+    puzzle9 puzzle;
+    
+    std::pair<int, long> winningPlayer = puzzle.playMarbleGame();
+    highestMarble *= 100;
+	std::pair<int, long> partTwoWinner = puzzle.playMarbleGame();
 
 	printf("Player %d won the game with %ld points\n", winningPlayer.first, winningPlayer.second);
 	printf("Player %d won part two with %ld points\n", partTwoWinner.first, partTwoWinner.second);
-	return 0;
 }
