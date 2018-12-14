@@ -17,6 +17,7 @@
 #include "puzzle8.hpp"
 #include "puzzle9.hpp"
 #include "puzzle10.hpp"
+#include "puzzle11.hpp"
 
 int main(int argc, const char * argv[]) {
     while (true) {
@@ -57,6 +58,9 @@ int main(int argc, const char * argv[]) {
                 break;
             case 10:
                 puzzle10::runPuzzle();
+                break;
+            case 11:
+                puzzle11::runPuzzle(7803);
                 break;
         }
     }

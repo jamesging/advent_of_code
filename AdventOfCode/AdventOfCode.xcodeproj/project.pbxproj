@@ -31,6 +31,7 @@
 		16CA312D21C1F82E00072E90 /* puzzle10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA312C21C1F82E00072E90 /* puzzle10.cpp */; };
 		16CA312E21C1FB6A00072E90 /* test_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 16CA312A21C1F7CC00072E90 /* test_input.txt */; };
 		16CA313021C2029600072E90 /* puzzle10_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 16CA312F21C2027A00072E90 /* puzzle10_input.txt */; };
+		16CA313321C4177300072E90 /* puzzle11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA313221C4177200072E90 /* puzzle11.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,6 +96,8 @@
 		16CA312B21C1F82E00072E90 /* puzzle10.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = puzzle10.hpp; sourceTree = "<group>"; };
 		16CA312C21C1F82E00072E90 /* puzzle10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle10.cpp; sourceTree = "<group>"; };
 		16CA312F21C2027A00072E90 /* puzzle10_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = puzzle10_input.txt; path = AdventOfCode/input_data/puzzle10_input.txt; sourceTree = SOURCE_ROOT; };
+		16CA313121C4177200072E90 /* puzzle11.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = puzzle11.hpp; sourceTree = "<group>"; };
+		16CA313221C4177200072E90 /* puzzle11.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle11.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +151,8 @@
 				16CA30DE21BDDBEE00072E90 /* puzzle9.cpp */,
 				16CA312B21C1F82E00072E90 /* puzzle10.hpp */,
 				16CA312C21C1F82E00072E90 /* puzzle10.cpp */,
+				16CA313121C4177200072E90 /* puzzle11.hpp */,
+				16CA313221C4177200072E90 /* puzzle11.cpp */,
 				16CA30D521BDDBC100072E90 /* main.cpp */,
 				16CA30F321BDDE2E00072E90 /* AOCUtils.hpp */,
 				16CA30F421BDDE2E00072E90 /* AOCUtils.cpp */,
@@ -234,6 +239,7 @@
 				16CA30F121BDDBEF00072E90 /* puzzle2.cpp in Sources */,
 				16CA30F021BDDBEF00072E90 /* puzzle8.cpp in Sources */,
 				16CA30EA21BDDBEF00072E90 /* puzzle5.cpp in Sources */,
+				16CA313321C4177300072E90 /* puzzle11.cpp in Sources */,
 				16CA30E821BDDBEF00072E90 /* puzzle1.cpp in Sources */,
 				16CA30E721BDDBEF00072E90 /* puzzle6.cpp in Sources */,
 				16CA30EE21BDDBEF00072E90 /* puzzle4.cpp in Sources */,
