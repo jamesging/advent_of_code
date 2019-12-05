@@ -32,6 +32,8 @@
 		16CA312E21C1FB6A00072E90 /* test_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 16CA312A21C1F7CC00072E90 /* test_input.txt */; };
 		16CA313021C2029600072E90 /* puzzle10_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 16CA312F21C2027A00072E90 /* puzzle10_input.txt */; };
 		16CA313321C4177300072E90 /* puzzle11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA313221C4177200072E90 /* puzzle11.cpp */; };
+		16CA313621C4776A00072E90 /* puzzle12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA313521C4776A00072E90 /* puzzle12.cpp */; };
+		16CA313821C48ACF00072E90 /* puzzle12_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 16CA313721C48AB900072E90 /* puzzle12_input.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +43,7 @@
 			dstPath = input_data;
 			dstSubfolderSpec = 7;
 			files = (
+				16CA313821C48ACF00072E90 /* puzzle12_input.txt in CopyFiles */,
 				16CA313021C2029600072E90 /* puzzle10_input.txt in CopyFiles */,
 				16CA312E21C1FB6A00072E90 /* test_input.txt in CopyFiles */,
 				16CA312021C1F34500072E90 /* puzzle1_input.txt in CopyFiles */,
@@ -98,6 +101,9 @@
 		16CA312F21C2027A00072E90 /* puzzle10_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = puzzle10_input.txt; path = AdventOfCode/input_data/puzzle10_input.txt; sourceTree = SOURCE_ROOT; };
 		16CA313121C4177200072E90 /* puzzle11.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = puzzle11.hpp; sourceTree = "<group>"; };
 		16CA313221C4177200072E90 /* puzzle11.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle11.cpp; sourceTree = "<group>"; };
+		16CA313421C4776A00072E90 /* puzzle12.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = puzzle12.hpp; sourceTree = "<group>"; };
+		16CA313521C4776A00072E90 /* puzzle12.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle12.cpp; sourceTree = "<group>"; };
+		16CA313721C48AB900072E90 /* puzzle12_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = puzzle12_input.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +159,8 @@
 				16CA312C21C1F82E00072E90 /* puzzle10.cpp */,
 				16CA313121C4177200072E90 /* puzzle11.hpp */,
 				16CA313221C4177200072E90 /* puzzle11.cpp */,
+				16CA313421C4776A00072E90 /* puzzle12.hpp */,
+				16CA313521C4776A00072E90 /* puzzle12.cpp */,
 				16CA30D521BDDBC100072E90 /* main.cpp */,
 				16CA30F321BDDE2E00072E90 /* AOCUtils.hpp */,
 				16CA30F421BDDE2E00072E90 /* AOCUtils.cpp */,
@@ -176,6 +184,7 @@
 				16CA311D21C1F33700072E90 /* puzzle7_input.txt */,
 				16CA311C21C1F33700072E90 /* puzzle8_input.txt */,
 				16CA312F21C2027A00072E90 /* puzzle10_input.txt */,
+				16CA313721C48AB900072E90 /* puzzle12_input.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -236,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16CA313621C4776A00072E90 /* puzzle12.cpp in Sources */,
 				16CA30F121BDDBEF00072E90 /* puzzle2.cpp in Sources */,
 				16CA30F021BDDBEF00072E90 /* puzzle8.cpp in Sources */,
 				16CA30EA21BDDBEF00072E90 /* puzzle5.cpp in Sources */,

@@ -18,10 +18,11 @@
 #include "puzzle9.hpp"
 #include "puzzle10.hpp"
 #include "puzzle11.hpp"
+#include "puzzle12.hpp"
 
 int main(int argc, const char * argv[]) {
     while (true) {
-        printf("Which puzzle do you want to run? Current options are [1-10].\nOr quit with 'q'\n?>\t");
+        printf("Which puzzle do you want to run? Current options are [1-12].\nOr quit with 'q'\n?>\t");
         std::string readCommand;
         std::cin >> readCommand;
         if (readCommand == "q") {
@@ -61,6 +62,9 @@ int main(int argc, const char * argv[]) {
                 break;
             case 11:
                 puzzle11::runPuzzle(7803);
+                break;
+            case 12:
+                puzzle12::runPuzzle(50000000000);
                 break;
         }
     }
