@@ -19,13 +19,16 @@
 class puzzle3 : puzzle {
 public:
     int minDist = INT_MAX;
+    int minSteps = INT_MAX;
     
     static void runPuzzle(...);
     
 private:
-    void parseWires(const std::vector<std::string> &fileContents, std::map<int, std::map<int, int> > &grid);
-    void addWireOnGrid(int x, int y, std::map<int, std::map<int, int> > &grid, const int wireNum);
-    void moveWire(int &x, int &y, char dir, int dist, std::map<int, std::map<int, int> > &grid, const int wireNum);
+    typedef std::map<int, std::map<int, std::map<int, int> > > grid_map;
+    typedef std::map<int, int> wire_dist;
+    void parseWires(const std::vector<std::string> &fileContents, grid_map &grid, wire_dist &wires);
+    void addWireOnGrid(int x, int y, grid_map &grid, wire_dist &wires, const int wireNum);
+    void moveWire(int &x, int &y, char dir, int dist, grid_map &grid, wire_dist &wires, const int wireNum);
 };
 
 #endif /* puzzle3_hpp */
