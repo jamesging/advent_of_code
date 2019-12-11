@@ -18,43 +18,62 @@ public:
         const static int OPCODE_MULT = 2;
         const static int OPCODE_SAVE = 3;
         const static int OPCODE_OUTPUT = 4;
+        const static int OPCODE_JMPT = 5;
+        const static int OPCODE_JMPF = 6;
+        const static int OPCODE_LT = 7;
+        const static int OPCODE_EQ = 8;
         const static int OPCODE_HALT = 99;
         struct opcode_inst {
-            int inst, size;
+            int inst, param_count;
         public:
             opcode_inst(int instruction_id, int num_params):
             inst(instruction_id),
-            size(num_params) {}
+            param_count(num_params) {}
             
-            opcode_inst() { size = -1; }
+            opcode_inst() { param_count = -1; }
         };
         
-        std::vector<int> params;
         std::vector<int> modes;
-        int input;
+        int pointer;
     public:
-        opcode(const opcode_inst &instruction_type, std::vector<int> ints);
+        opcode(const int ptr, const std::vector<int> &data);
         
         const static opcode_inst ADD;
         const static opcode_inst MULT;
         const static opcode_inst SAVE;
         const static opcode_inst OUTPUT;
+        const static opcode_inst JMPT;
+        const static opcode_inst JMPF;
+        const static opcode_inst LT;
+        const static opcode_inst EQ;
         const static opcode_inst HALT;
         
         static opcode_inst get_instruction_type(const int instruction);
         
-        bool operate(std::vector<int> &data) const;
-        void add(std::vector<int> &data) const;
-        void mult(std::vector<int> &data) const;
-        void save(std::vector<int> &data) const;
-        void output(std::vector<int> &data) const;
+        bool operate(IntCodeComputer &computer, std::vector<int> &data) const;
+        void add(IntCodeComputer &computer, std::vector<int> &data) const;
+        void mult(IntCodeComputer &computer, std::vector<int> &data) const;
+        void save(IntCodeComputer &computer, std::vector<int> &data) const;
+        void output(IntCodeComputer &computer, std::vector<int> &data) const;
+        void jump(IntCodeComputer &computer, std::vector<int> &data, bool if_not_zero) const;
+        void less_than(IntCodeComputer &computer, std::vector<int> &data) const;
+        void equals(IntCodeComputer &computer, std::vector<int> &data) const;
     };
     
-    static void parseOpcodes(const std::vector<std::string> &fileContents,
-                             std::vector<opcode> &opcodes,
+    IntCodeComputer() {
+        inst_ptr = 0;
+        user_input = 0;
+    };
+    
+    void parseProgram(const std::vector<std::string> &fileContents,
                              std::vector<int> &data,
                              const int input = 0);
-    static std::vector<int> outputStream;
+    const int fetchData(const std::vector<int> &data, int ptr, int mode = 0);
+    std::vector<int> outputStream;
+    int inst_ptr;
+    
+private:
+    int user_input;
 };
 
 #endif /* IntCodeComputer_hpp */

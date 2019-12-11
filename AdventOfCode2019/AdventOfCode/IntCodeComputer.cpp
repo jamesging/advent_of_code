@@ -12,13 +12,15 @@
 
 typedef IntCodeComputer::opcode::opcode_inst opcode_inst;
 
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::ADD = opcode_inst(OPCODE_ADD, 4);
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::MULT = opcode_inst(OPCODE_MULT, 4);
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::SAVE = opcode_inst(OPCODE_SAVE, 2);
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::OUTPUT = opcode_inst(OPCODE_OUTPUT, 2);
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::HALT = opcode_inst(OPCODE_HALT, 1);
-
-std::vector<int> IntCodeComputer::outputStream;
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::ADD = opcode_inst(OPCODE_ADD, 3);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::MULT = opcode_inst(OPCODE_MULT, 3);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::SAVE = opcode_inst(OPCODE_SAVE, 1);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::OUTPUT = opcode_inst(OPCODE_OUTPUT, 1);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::JMPT = opcode_inst(OPCODE_JMPT, 2);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::JMPF = opcode_inst(OPCODE_JMPF, 2);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::LT = opcode_inst(OPCODE_LT, 3);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::EQ = opcode_inst(OPCODE_EQ, 3);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::HALT = opcode_inst(OPCODE_HALT, 0);
 
 opcode_inst IntCodeComputer::opcode::get_instruction_type(const int instruction) {
     int parsed_instruction = instruction;
@@ -40,6 +42,14 @@ opcode_inst IntCodeComputer::opcode::get_instruction_type(const int instruction)
             return OUTPUT;
         case OPCODE_HALT:
             return HALT;
+        case OPCODE_JMPT:
+            return JMPT;
+        case OPCODE_JMPF:
+            return JMPF;
+        case OPCODE_LT:
+            return LT;
+        case OPCODE_EQ:
+            return EQ;
         default:
             printf("Invalid opcode instruction id %d\n", parsed_instruction);
             break;
@@ -47,78 +57,123 @@ opcode_inst IntCodeComputer::opcode::get_instruction_type(const int instruction)
     return opcode_inst();
 }
 
-IntCodeComputer::opcode::opcode(const opcode_inst &instruction_type, std::vector<int> ints) {
-    if (ints.size() != instruction_type.size) {
-        printf("ERROR invalid number of ints %ld, expected %d!\n", ints.size(), instruction_type.size);
-        return;
-    }
-    params = ints;
+IntCodeComputer::opcode::opcode(const int ptr, const std::vector<int> &data) {
+    pointer = ptr;
+    int instruction = data[ptr];
+    opcode_inst instruction_type = opcode::get_instruction_type(instruction);
     
-    if (params[0] > OPCODE_HALT) {
+    modes.insert(modes.begin(), instruction_type.param_count, 0);
+    
+    if (instruction > OPCODE_HALT) {
         char inst_buffer[50];
-        snprintf(inst_buffer, 50, "%d", params[0]);
+        snprintf(inst_buffer, 50, "%d", instruction);
         std::string str_instruction = std::string(inst_buffer);
         str_instruction = str_instruction.substr(0, str_instruction.length() - 2);
-        while (str_instruction.size() < ints.size() - 1) {
+        while (str_instruction.size() < instruction_type.param_count) {
             str_instruction.insert(str_instruction.begin(), '0');
         }
-        for (int i = ((int)ints.size()-2);i >= 0;i--) {
+        for (int i = (instruction_type.param_count-1);i >= 0;i--) {
             int mode = str_instruction[i] - '0';
-            modes.push_back(mode);
+            modes[(instruction_type.param_count-1)-i] = mode;
         }
-        params[0] = instruction_type.inst;
     }
 }
 
-bool IntCodeComputer::opcode::operate(std::vector<int> &data) const {
-    switch (params[0]) {
+bool IntCodeComputer::opcode::operate(IntCodeComputer &computer, std::vector<int> &data) const {
+    switch (get_instruction_type(data[pointer]).inst) {
         case OPCODE_HALT:
             return false;
         case OPCODE_ADD:
-            add(data);
+            add(computer, data);
             return true;
         case OPCODE_MULT:
-            mult(data);
+            mult(computer, data);
             return true;
         case OPCODE_SAVE:
-            save(data);
+            save(computer, data);
             return true;
         case OPCODE_OUTPUT:
-            output(data);
+            output(computer, data);
+            return true;
+        case OPCODE_JMPT:
+            jump(computer, data, true);
+            return true;
+        case OPCODE_JMPF:
+            jump(computer, data, false);
+            return true;
+        case OPCODE_LT:
+            less_than(computer, data);
+            return true;
+        case OPCODE_EQ:
+            equals(computer, data);
             return true;
     }
     return false;
 }
 
-void IntCodeComputer::opcode::add(std::vector<int> &data) const {
-    int inputOne = (modes.size() > 0 && modes[0]) ? params[1] : data[params[1]];
-    int inputTwo = (modes.size() > 1 && modes[1]) ? params[2] : data[params[2]];
+void IntCodeComputer::opcode::add(IntCodeComputer &computer, std::vector<int> &data) const {
+    int inputOne = computer.fetchData(data, pointer+1, modes[0]);
+    int inputTwo = computer.fetchData(data, pointer+2, modes[1]);
     int addResult = inputOne + inputTwo;
-    data[params[3]] = addResult;
+    data[data[pointer+3]] = addResult;
+    computer.inst_ptr += 4;
 }
 
-void IntCodeComputer::opcode::mult(std::vector<int> &data) const {
-    int inputOne = (modes.size() > 0 && modes[0]) ? params[1] : data[params[1]];
-    int inputTwo = (modes.size() > 1 && modes[1]) ? params[2] : data[params[2]];
+void IntCodeComputer::opcode::mult(IntCodeComputer &computer, std::vector<int> &data) const {
+    int inputOne = computer.fetchData(data, pointer+1, modes[0]);
+    int inputTwo = computer.fetchData(data, pointer+2, modes[1]);
     int multResult = inputOne * inputTwo;
-    data[params[3]] = multResult;
+    data[data[pointer+3]] = multResult;
+    computer.inst_ptr += 4;
 }
 
-void IntCodeComputer::opcode::save(std::vector<int> &data) const {
-    data[params[1]] = input;
+void IntCodeComputer::opcode::save(IntCodeComputer &computer, std::vector<int> &data) const {
+    data[data[pointer+1]] = computer.user_input;
+    computer.inst_ptr += 2;
 }
 
-void IntCodeComputer::opcode::output(std::vector<int> &data) const {
-    int outputData = (modes.size() > 0 && modes[0]) ? params[1] : data[params[1]];
-    outputStream.push_back(outputData);
-//    printf("output: %d\n", outputData);
+void IntCodeComputer::opcode::output(IntCodeComputer &computer, std::vector<int> &data) const {
+    computer.outputStream.push_back(computer.fetchData(data, pointer+1, modes[0]));
+    computer.inst_ptr += 2;
 }
 
-void IntCodeComputer::parseOpcodes(const std::vector<std::string> &fileContents,
-                                   std::vector<opcode> &opcodes,
+void IntCodeComputer::opcode::jump(IntCodeComputer &computer, std::vector<int> &data, bool if_not_zero) const {
+    bool nonZero = computer.fetchData(data, pointer+1, modes[0]);
+    int newPtr = pointer + 3;
+    if ((if_not_zero && nonZero) || (!if_not_zero && !nonZero)) {
+        newPtr = computer.fetchData(data, pointer+2, modes[1]);
+    }
+    computer.inst_ptr = newPtr;
+}
+
+void IntCodeComputer::opcode::less_than(IntCodeComputer &computer, std::vector<int> &data) const {
+    int inputOne = computer.fetchData(data, pointer+1, modes[0]);
+    int inputTwo = computer.fetchData(data, pointer+2, modes[1]);
+    int result = 0;
+    if (inputOne < inputTwo) {
+        result = 1;
+    }
+    data[data[pointer+3]] = result;
+    
+    computer.inst_ptr += 4;
+}
+
+void IntCodeComputer::opcode::equals(IntCodeComputer &computer, std::vector<int> &data) const {
+    int inputOne = computer.fetchData(data, pointer+1, modes[0]);
+    int inputTwo = computer.fetchData(data, pointer+2, modes[1]);
+    int result = 0;
+    if (inputOne == inputTwo) {
+        result = 1;
+    }
+    data[data[pointer+3]] = result;
+    
+    computer.inst_ptr += 4;
+}
+
+void IntCodeComputer::parseProgram(const std::vector<std::string> &fileContents,
                                    std::vector<int> &data,
                                    const int input) {
-    std::vector<int> opcode_ints;
+    user_input = input;
     opcode_inst instruction_type;
     for (auto &line : fileContents) {
         size_t startPos = 0, endPos = line.find_first_of(',', startPos);
@@ -130,27 +185,22 @@ void IntCodeComputer::parseOpcodes(const std::vector<std::string> &fileContents,
                 endPos = line.length()-1;
             }
         }
-        for (int i = 0; i < data.size();i++) {
-            printf("%d: %d\n", i, data[i]);
-        }
-        printf("\n");
-        for (int i : data) {
-//            printf("%d\n", i);
-            opcode_ints.push_back(i);
-            if (opcode_ints.size() == 1) {
-                instruction_type = opcode::get_instruction_type(opcode_ints[0]);
-            }
-            if (instruction_type.size == -1) {
-                opcode_ints.clear();
-            } else if (opcode_ints.size() == instruction_type.size) {
-                opcodes.push_back(opcode(instruction_type, opcode_ints));
-                if (instruction_type.inst == opcode::OPCODE_SAVE) {
-                    printf("Storing input: %d\n", input);
-                    opcodes.back().input = input;
-                }
-                opcodes.back().operate(data);
-                opcode_ints.clear();
-            }
+    }
+    int instructions_run = 0;
+    while (data[inst_ptr] != opcode::OPCODE_HALT) {
+//        printf("Pointer: %d\n", inst_ptr);
+//        for(int i = 0; i < data.size();i++) {
+//            printf("%d: %d\n", i, data[i]);
+//        }
+//        printf("\n");
+        opcode(inst_ptr, data).operate(*this, data);
+        instructions_run++;
+        if (instructions_run % 1000 == 0) {
+            printf("Computer has run %d instructions\n", instructions_run);
         }
     }
+}
+
+const int IntCodeComputer::fetchData(const std::vector<int> &data, int ptr, int mode) {
+    return mode ? data[ptr] : data[data[ptr]];
 }

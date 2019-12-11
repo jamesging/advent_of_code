@@ -21,8 +21,8 @@ public:
     static void runPuzzle(...);
     
 private:
-    void runPartOne(const std::vector<IntCodeComputer::opcode> &opcodes, std::vector<int> data);
-    void runPartTwo(const std::vector<IntCodeComputer::opcode> &opcodes, const int goal, std::vector<int> data);
+    void runPartOne(const std::vector<std::string> &fileContents);
+    void runPartTwo(const std::vector<std::string> &fileContents, const int goal);
 };
 
 #endif /* puzzle2_hpp */
