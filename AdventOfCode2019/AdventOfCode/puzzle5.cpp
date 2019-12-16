@@ -4,24 +4,22 @@
 
 void puzzle5::runPartOne(const std::vector<std::string> &fileContents) {
     IntCodeComputer computer;
-    std::vector<int> data;
-    computer.parseProgram(fileContents, data, 1);
+    computer.parseProgram(fileContents, 1);
     
     printf("output:\n");
-    for (int i : computer.outputStream) {
-        printf("%d,", i);
+    for (long i : computer.outputStream) {
+        printf("%ld,", i);
     }
     printf("\n");
 }
 
 void puzzle5::runPartTwo(const std::vector<std::string> &fileContents) {
     IntCodeComputer computer;
-    std::vector<int> data;
-    computer.parseProgram(fileContents, data, 5);
+    computer.parseProgram(fileContents, 5);
     
     printf("output:\n");
-    for (int i : computer.outputStream) {
-        printf("%d,", i);
+    for (long i : computer.outputStream) {
+        printf("%ld,", i);
     }
     printf("\n");
 }

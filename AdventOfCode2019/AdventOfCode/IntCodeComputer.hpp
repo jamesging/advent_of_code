@@ -22,6 +22,7 @@ public:
         const static int OPCODE_JMPF = 6;
         const static int OPCODE_LT = 7;
         const static int OPCODE_EQ = 8;
+        const static int OPCODE_OFFSET = 9;
         const static int OPCODE_HALT = 99;
         struct opcode_inst {
             int inst, param_count;
@@ -34,9 +35,8 @@ public:
         };
         
         std::vector<int> modes;
-        int pointer;
     public:
-        opcode(const int ptr, const std::vector<int> &data);
+        opcode(const int ptr, const std::vector<long long> &data);
         
         const static opcode_inst ADD;
         const static opcode_inst MULT;
@@ -46,34 +46,57 @@ public:
         const static opcode_inst JMPF;
         const static opcode_inst LT;
         const static opcode_inst EQ;
+        const static opcode_inst OFFSET;
         const static opcode_inst HALT;
         
         static opcode_inst get_instruction_type(const int instruction);
         
-        bool operate(IntCodeComputer &computer, std::vector<int> &data) const;
-        void add(IntCodeComputer &computer, std::vector<int> &data) const;
-        void mult(IntCodeComputer &computer, std::vector<int> &data) const;
-        void save(IntCodeComputer &computer, std::vector<int> &data) const;
-        void output(IntCodeComputer &computer, std::vector<int> &data) const;
-        void jump(IntCodeComputer &computer, std::vector<int> &data, bool if_not_zero) const;
-        void less_than(IntCodeComputer &computer, std::vector<int> &data) const;
-        void equals(IntCodeComputer &computer, std::vector<int> &data) const;
+        bool operate(IntCodeComputer &computer) const;
+        void add(IntCodeComputer &computer) const;
+        void mult(IntCodeComputer &computer) const;
+        bool save(IntCodeComputer &computer) const;
+        void output(IntCodeComputer &computer) const;
+        void jump(IntCodeComputer &computer, bool if_not_zero) const;
+        void less_than(IntCodeComputer &computer) const;
+        void equals(IntCodeComputer &computer) const;
+        void offset_addr_base(IntCodeComputer &computer) const;
     };
     
     IntCodeComputer() {
         inst_ptr = 0;
-        user_input = 0;
+        addr_base = 0;
+        waitForInput = false;
+        halted = false;
+        waiting = false;
+        memory = std::vector<long long>();
+        user_input = std::vector<long long>();
     };
     
     void parseProgram(const std::vector<std::string> &fileContents,
-                             std::vector<int> &data,
-                             const int input = 0);
-    const int fetchData(const std::vector<int> &data, int ptr, int mode = 0);
-    std::vector<int> outputStream;
+                             const long long input = 0);
+    void continueProcessing();
+    void addInput(long long newInput, bool continue_program = false) {
+        user_input.push_back(newInput);
+        if (continue_program) {
+            continueProcessing();
+        }
+    };
+    void setWaitForInput(bool newSetting) { waitForInput = newSetting; };
+    const long long fetchData(int ptr, int mode = 0);
+    void storeData(int ptr, int mode, long long data);
+    void checkAndExpandMemory(int ptr, int mode);
+    const bool isHalted() const { return halted; };
+    const bool isWaitingForInput() const { return waiting; };
+    std::vector<long long> outputStream;
     int inst_ptr;
+    int addr_base;
+    
+    std::vector<long long> memory;
     
 private:
-    int user_input;
+    std::vector<long long> user_input;
+    bool waitForInput;
+    bool halted, waiting;
 };
 
 #endif /* IntCodeComputer_hpp */

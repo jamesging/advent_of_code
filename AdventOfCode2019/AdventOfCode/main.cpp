@@ -13,6 +13,9 @@
 #include "puzzle4.hpp"
 #include "puzzle5.hpp"
 #include "puzzle6.hpp"
+#include "puzzle7.hpp"
+#include "puzzle8.hpp"
+#include "puzzle9.hpp"
 
 int main(int argc, const char * argv[]) {
     while (true) {
@@ -41,6 +44,15 @@ int main(int argc, const char * argv[]) {
                 break;
             case 6:
                 puzzle6::runPuzzle();
+                break;
+            case 7:
+                puzzle7::runPuzzle();
+                break;
+            case 8:
+                puzzle8::runPuzzle();
+                break;
+            case 9:
+                puzzle9::runPuzzle();
                 break;
         }
     }
