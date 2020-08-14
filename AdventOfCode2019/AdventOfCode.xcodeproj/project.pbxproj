@@ -24,6 +24,8 @@
 		162D9EB723A5EFBE002C9CCC /* puzzle8_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 162D9EB623A5EFB3002C9CCC /* puzzle8_input.txt */; };
 		162D9EBA23A5F6A0002C9CCC /* puzzle9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 162D9EB823A5F69F002C9CCC /* puzzle9.cpp */; };
 		162D9EBC23A602B3002C9CCC /* puzzle9_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 162D9EBB23A602A4002C9CCC /* puzzle9_input.txt */; };
+		1675314E24E5A588004B8A5D /* puzzle10_input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1675314D24E5A579004B8A5D /* puzzle10_input.txt */; };
+		1675315124E5A768004B8A5D /* puzzle10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1675315024E5A768004B8A5D /* puzzle10.cpp */; };
 		16CA30D621BDDBC100072E90 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA30D521BDDBC100072E90 /* main.cpp */; };
 		16CA30E821BDDBEF00072E90 /* puzzle1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA30DD21BDDBEE00072E90 /* puzzle1.cpp */; };
 		16CA30F521BDDE2E00072E90 /* AOCUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16CA30F421BDDE2E00072E90 /* AOCUtils.cpp */; };
@@ -46,6 +48,7 @@
 				1610F62F23A58DA0006B1E8A /* puzzle7_input.txt in CopyFiles */,
 				162D9EB723A5EFBE002C9CCC /* puzzle8_input.txt in CopyFiles */,
 				162D9EBC23A602B3002C9CCC /* puzzle9_input.txt in CopyFiles */,
+				1675314E24E5A588004B8A5D /* puzzle10_input.txt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +81,9 @@
 		162D9EB823A5F69F002C9CCC /* puzzle9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle9.cpp; sourceTree = "<group>"; };
 		162D9EB923A5F69F002C9CCC /* puzzle9.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = puzzle9.hpp; sourceTree = "<group>"; };
 		162D9EBB23A602A4002C9CCC /* puzzle9_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = puzzle9_input.txt; path = AdventOfCode/input_data/puzzle9_input.txt; sourceTree = SOURCE_ROOT; };
+		1675314D24E5A579004B8A5D /* puzzle10_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = puzzle10_input.txt; sourceTree = "<group>"; };
+		1675314F24E5A768004B8A5D /* puzzle10.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = puzzle10.hpp; sourceTree = "<group>"; };
+		1675315024E5A768004B8A5D /* puzzle10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle10.cpp; sourceTree = "<group>"; };
 		16CA30D221BDDBC100072E90 /* AdventOfCode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdventOfCode; sourceTree = BUILT_PRODUCTS_DIR; };
 		16CA30D521BDDBC100072E90 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		16CA30DD21BDDBEE00072E90 /* puzzle1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = puzzle1.cpp; sourceTree = "<group>"; };
@@ -137,6 +143,8 @@
 				162D9EB423A5ECC5002C9CCC /* puzzle8.hpp */,
 				162D9EB823A5F69F002C9CCC /* puzzle9.cpp */,
 				162D9EB923A5F69F002C9CCC /* puzzle9.hpp */,
+				1675315024E5A768004B8A5D /* puzzle10.cpp */,
+				1675314F24E5A768004B8A5D /* puzzle10.hpp */,
 				16CA30D521BDDBC100072E90 /* main.cpp */,
 				1610F621239B2A17006B1E8A /* IntCodeComputer.hpp */,
 				1610F622239B2A17006B1E8A /* IntCodeComputer.cpp */,
@@ -159,6 +167,7 @@
 				1610F62E23A58D97006B1E8A /* puzzle7_input.txt */,
 				162D9EB623A5EFB3002C9CCC /* puzzle8_input.txt */,
 				162D9EBB23A602A4002C9CCC /* puzzle9_input.txt */,
+				1675314D24E5A579004B8A5D /* puzzle10_input.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -221,6 +230,7 @@
 			files = (
 				1610F620239B298B006B1E8A /* puzzle5.cpp in Sources */,
 				162D9EB523A5ECC5002C9CCC /* puzzle8.cpp in Sources */,
+				1675315124E5A768004B8A5D /* puzzle10.cpp in Sources */,
 				1610F623239B2A17006B1E8A /* IntCodeComputer.cpp in Sources */,
 				162D9EBA23A5F6A0002C9CCC /* puzzle9.cpp in Sources */,
 				1610F61D239AB68D006B1E8A /* puzzle4.cpp in Sources */,

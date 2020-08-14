@@ -25,9 +25,10 @@ public:
         const static int OPCODE_OFFSET = 9;
         const static int OPCODE_HALT = 99;
         struct opcode_inst {
-            int inst, param_count;
+            long inst;
+            int param_count;
         public:
-            opcode_inst(int instruction_id, int num_params):
+            opcode_inst(long instruction_id, int num_params):
             inst(instruction_id),
             param_count(num_params) {}
             
@@ -36,7 +37,7 @@ public:
         
         std::vector<int> modes;
     public:
-        opcode(const int ptr, const std::vector<long long> &data);
+        opcode(const long ptr, const std::vector<long long> &data);
         
         const static opcode_inst ADD;
         const static opcode_inst MULT;
@@ -49,7 +50,7 @@ public:
         const static opcode_inst OFFSET;
         const static opcode_inst HALT;
         
-        static opcode_inst get_instruction_type(const int instruction);
+        static opcode_inst get_instruction_type(const long instruction);
         
         bool operate(IntCodeComputer &computer) const;
         void add(IntCodeComputer &computer) const;
@@ -82,14 +83,14 @@ public:
         }
     };
     void setWaitForInput(bool newSetting) { waitForInput = newSetting; };
-    const long long fetchData(int ptr, int mode = 0);
-    void storeData(int ptr, int mode, long long data);
-    void checkAndExpandMemory(int ptr, int mode);
+    const long long fetchData(long ptr, int mode = 0);
+    void storeData(long ptr, int mode, long long data);
+    void checkAndExpandMemory(long ptr, int mode);
     const bool isHalted() const { return halted; };
     const bool isWaitingForInput() const { return waiting; };
     std::vector<long long> outputStream;
-    int inst_ptr;
-    int addr_base;
+    long inst_ptr;
+    long addr_base;
     
     std::vector<long long> memory;
     

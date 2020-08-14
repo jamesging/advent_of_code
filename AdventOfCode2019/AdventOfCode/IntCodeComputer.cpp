@@ -20,14 +20,14 @@ const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::JMPT = opcod
 const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::JMPF = opcode_inst(OPCODE_JMPF, 2);
 const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::LT = opcode_inst(OPCODE_LT, 3);
 const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::EQ = opcode_inst(OPCODE_EQ, 3);
-const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::OFFSET = opcode_inst(OPCODE_OFFSET, 2);
+const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::OFFSET = opcode_inst(OPCODE_OFFSET, 1);
 const IntCodeComputer::opcode::opcode_inst IntCodeComputer::opcode::HALT = opcode_inst(OPCODE_HALT, 0);
 
-opcode_inst IntCodeComputer::opcode::get_instruction_type(const int instruction) {
-    int parsed_instruction = instruction;
+opcode_inst IntCodeComputer::opcode::get_instruction_type(const long instruction) {
+    long parsed_instruction = instruction;
     if (instruction > OPCODE_HALT) {
         char inst_buffer[50];
-        snprintf(inst_buffer, 50, "%d", instruction);
+        snprintf(inst_buffer, 50, "%ld", instruction);
         std::string str_instruction = std::string(inst_buffer);
         str_instruction = str_instruction.substr(str_instruction.length() - 2, 2);
         parsed_instruction = atoi(str_instruction.c_str());
@@ -54,21 +54,21 @@ opcode_inst IntCodeComputer::opcode::get_instruction_type(const int instruction)
         case OPCODE_OFFSET:
             return OFFSET;
         default:
-            printf("Invalid opcode instruction id %d\n", parsed_instruction);
+            printf("Invalid opcode instruction id %ld\n", parsed_instruction);
             break;
     }
     return opcode_inst();
 }
 
-IntCodeComputer::opcode::opcode(const int ptr, const std::vector<long long> &data) {
-    int instruction = (int)data[ptr];
+IntCodeComputer::opcode::opcode(const long ptr, const std::vector<long long> &data) {
+    long instruction = (long)data[ptr];
     opcode_inst instruction_type = opcode::get_instruction_type(instruction);
     
     modes.insert(modes.begin(), instruction_type.param_count, 0);
     
     if (instruction > OPCODE_HALT) {
         char inst_buffer[50];
-        snprintf(inst_buffer, 50, "%d", instruction);
+        snprintf(inst_buffer, 50, "%ld", instruction);
         std::string str_instruction = std::string(inst_buffer);
         str_instruction = str_instruction.substr(0, str_instruction.length() - 2);
         while (str_instruction.size() < instruction_type.param_count) {
@@ -138,6 +138,7 @@ bool IntCodeComputer::opcode::save(IntCodeComputer &computer) const {
         return false;
     }
     if (!computer.user_input.size()) {
+        printf("Trying to read missing input!\n");
         return false;
     }
     computer.storeData(computer.inst_ptr+1, modes[0], computer.user_input.back());
@@ -187,9 +188,6 @@ void IntCodeComputer::opcode::equals(IntCodeComputer &computer) const {
 void IntCodeComputer::opcode::offset_addr_base(IntCodeComputer &computer) const {
     long long inputOne = computer.fetchData(computer.inst_ptr+1, modes[0]);
     computer.addr_base += inputOne;
-    if (computer.addr_base < 0) {
-        printf("what the hell happened here?\n");
-    }
     computer.inst_ptr += 2;
 }
 
@@ -200,7 +198,7 @@ void IntCodeComputer::parseProgram(const std::vector<std::string> &fileContents,
     for (auto &line : fileContents) {
         size_t startPos = 0, endPos = line.find_first_of(',', startPos);
         while (startPos != std::string::npos && startPos <= endPos) {
-            memory.push_back(atol(line.substr(startPos, endPos).c_str()));
+            memory.push_back(atol(line.substr(startPos, endPos-startPos).c_str()));
             startPos = endPos+1;
             endPos = line.find_first_of(',', startPos);
             if (endPos == std::string::npos) {
@@ -224,9 +222,10 @@ void IntCodeComputer::continueProcessing() {
             printf("Computer has run %d instructions since continuing\n", instructions_run);
         }
     }
+    printf("Computer has finished after %d instructions\n", instructions_run);
 }
 
-const long long IntCodeComputer::fetchData(int ptr, int mode) {
+const long long IntCodeComputer::fetchData(long ptr, int mode) {
     switch (mode) {
         case 0:
             checkAndExpandMemory(ptr, mode);
@@ -243,19 +242,20 @@ const long long IntCodeComputer::fetchData(int ptr, int mode) {
     };
 }
 
-void IntCodeComputer::storeData(int ptr, int mode, long long data) {
+void IntCodeComputer::storeData(long ptr, int mode, long long data) {
     checkAndExpandMemory(ptr, mode);
-    if (mode < 2) {
-        memory[memory[ptr]] = data;
-    } else {
+    if (mode == 2) {
         memory[memory[ptr] + addr_base] = data;
+    } else {
+        memory[memory[ptr]] = data;
     }
 }
 
-void IntCodeComputer::checkAndExpandMemory(int ptr, int mode) {
+void IntCodeComputer::checkAndExpandMemory(long ptr, int mode) {
     if (ptr >= memory.size() || memory[ptr] >= memory.size()) {
         if (ptr >= memory.size()) {
             long long slotsToAdd = ptr - memory.size();
+            slotsToAdd++;
             if (slotsToAdd <= 0) {
                 for (int i = 0;i < slotsToAdd;i++) {
                     memory.push_back(0);//super slow, but for some reason .resize gives allocation errors
@@ -265,6 +265,7 @@ void IntCodeComputer::checkAndExpandMemory(int ptr, int mode) {
         if (mode == 0) {
             if (memory[ptr] >= memory.size()) {
                 long long slotsToAdd = memory[ptr] - memory.size();
+                slotsToAdd++;
                 if (slotsToAdd > 0) {
                     for (int i = 0;i < slotsToAdd;i++) {
                         memory.push_back(0);
@@ -272,13 +273,14 @@ void IntCodeComputer::checkAndExpandMemory(int ptr, int mode) {
                 }
             }
         }
-        if (mode == 2) {
-            if (memory[ptr] + addr_base >= memory.size()) {
-                long long slotsToAdd = (memory[ptr] + addr_base) - memory.size();
-                if (slotsToAdd > 0) {
-                    for (int i = 0;i < slotsToAdd;i++) {
-                        memory.push_back(0);
-                    }
+    }
+    if (mode == 2) {
+        if ((memory[ptr] + addr_base) >= memory.size()) {
+            long long slotsToAdd = (memory[ptr] + addr_base) - memory.size();
+            slotsToAdd++;
+            if (slotsToAdd > 0) {
+                for (int i = 0;i < slotsToAdd;i++) {
+                    memory.push_back(0);
                 }
             }
         }

@@ -21,6 +21,8 @@ public:
     static void runPuzzle(...);
     
 private:
+    void runPartOne(const std::vector<std::string> &fileContents);
+    void runPartTwo(const std::vector<std::string> &fileContents);
 };
 
 #endif /* puzzle9_hpp */
